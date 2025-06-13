@@ -1,51 +1,66 @@
 const API_URL = "http://localhost:5000/produtos";
 const produtosContainer = document.getElementById('produtos-container');
-const carrinhoList = document.getElementById('carrinho');
-const totalElement = document.getElementById('total');
-let carrinho = [];
+const carrinho = [];
 
-// Carrega produtos da API
-fetch(API_URL)
-  .then(res => res.json())
-  .then(produtos => {
-    produtos.forEach(produto => {
-      const div = document.createElement('div');
-      div.classList.add('produto');
-      div.innerHTML = `
-        <h3>${produto.nome}</h3>
-        <p>${produto.descricao}</p>
-        <p><strong>R$ ${produto.preco.toFixed(2)}</strong></p>
-        <button onclick="adicionarAoCarrinho(${produto.id}, '${produto.nome}', ${produto.preco})">Adicionar</button>
-      `;
-      produtosContainer.appendChild(div);
-    });
+const carrinhoIcon = document.querySelector("#carrinho-icon");
+const modal = document.querySelector("#carrinho-modal");
+const modalClose = document.querySelector("#fechar-carrinho");
+
+carrinhoIcon.addEventListener("click", () => {
+  modal.classList.add("active");
+});
+
+modalClose.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
+
+// Funcao pra atualizar o carrinho no modal
+function atualizarCarrinho(){
+  const ul = document.querySelector("#carrinho-itens");
+  ul.innerHTML = '';
+  let total = 0;
+
+  carrinho.forEach((item, index) => {
+    ul.innerHTML += `
+      <li>
+        ${item.nome} - R$ ${item.preco.toFixed(2)} 
+        <button onclick="removerDoCarrinho(${index})">Remover</button>
+      </li>`;
+    total += item.preco;
   });
 
-// Função para adicionar ao carrinho
-function adicionarAoCarrinho(id, nome, preco) {
-  carrinho.push({ id, nome, preco });
-  atualizarCarrinho();
+  document.querySelector("#carrinho-total").innerText = total.toFixed(2);
+  document.querySelector("#carrinho-quantidade").innerText = carrinho.length;
 }
 
-// Função para remover item
 function removerDoCarrinho(index) {
   carrinho.splice(index, 1);
   atualizarCarrinho();
 }
 
-// Atualiza visual do carrinho
-function atualizarCarrinho() {
-  carrinhoList.innerHTML = "";
-  let total = 0;
-  carrinho.forEach((item, index) => {
-    total += item.preco;
-    const li = document.createElement('li');
-    li.textContent = `${item.nome} - R$ ${item.preco.toFixed(2)}`;
-    const btn = document.createElement('button');
-    btn.textContent = "Remover";
-    btn.onclick = () => removerDoCarrinho(index);
-    li.appendChild(btn);
-    carrinhoList.appendChild(li);
-  });
-  totalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+function adicionarAoCarrinho(id, nome, preco) {
+  carrinho.push({ id, nome, preco });
+  atualizarCarrinho();
 }
+
+function exibirProdutos(){
+  fetch(API_URL)
+    .then(res => res.json()) 
+    .then(produtos => {
+      produtosContainer.innerHTML = '';
+      produtos.forEach(produto => {
+        const li = document.createElement('li');  
+        li.className = 'produto';  // <-- Aqui adiciona a classe
+        li.innerHTML = `
+          <h3>${produto.nome}</h3> 
+          <p>R$ ${produto.preco.toFixed(2)}</p>
+          <p>${produto.descricao}</p>
+          <button id="add-carrinho" onclick="adicionarAoCarrinho(${produto.id}, '${produto.nome}', ${produto.preco})">
+            Adicionar ao carrinho
+          </button>`;
+        produtosContainer.prepend(li);
+      });
+    })
+    .catch(err => console.log(err));  
+}
+window.onload = exibirProdutos;

@@ -6,13 +6,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Loja Online</h1>
 
-  <div id="produtos-container"></div>
+<header>
 
-  <h2>Carrinho de Compras</h2>
-  <ul id="carrinho"></ul>
-  <p id="total">Total: R$ 0.00</p>
+  <h1>Minha Loja</h1>
+  
+  <div id="carrinho-icon" style="cursor: pointer">
+    <img src="img/shopping-cart-svgrepo-com.svg" alt="">
+    <span id="carrinho-quantidade">0</span>
+  </div>
+</header>
+
+<div id="carrinho-modal" class="modal">
+  <div class="modal-content">
+    <span id="fechar-carrinho" class="fechar">&times;</span>
+    <h2>Seu Carrinho</h2>
+    <ul id="carrinho-itens"></ul>
+    <p>Total: R$ <span id="carrinho-total">0.00</span></p>
+  </div>
+</div>
+
+
+<div id="produtos-container"></div>
+
+
+
+
 
   <script src="script.js"></script>
 </body>
