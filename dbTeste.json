@@ -1,0 +1,7 @@
+{
+  "produtos": [
+    { "id": 1, "nome": "Camiseta Preta", "descricao": "100% algodão", "preco": 49.90 },
+    { "id": 2, "nome": "Calça Jeans", "descricao": "Azul escura", "preco": 89.90 },
+    { "id": 3, "nome": "Tênis Esportivo", "descricao": "Leve e confortável", "preco": 129.90 }
+  ]
+}
